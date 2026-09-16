@@ -105,4 +105,14 @@ Por lo tanto, **el impacto en las variables evaluadas será el siguiente**:
 * **Impacto en `task_dta_list[index].WCET`**: Dado que la función bloquea el flujo del programa por un tiempo prolongado mientras el contador de ciclos DWT sigue su marcha, el `LET` de esa iteración en particular se disparará (marcará miles de microsegundos extra). Por consiguiente, **la variable `WCET` atrapará y guardará inmediatamente este valor inflado de manera permanente**, arruinando las métricas del "Peor caso de ejecución" de la tarea al registrar el retardo introducido por la consola de depuración en lugar de la lógica pura del programa.
 
 
-* **Impacto en `g_app_runtime_us`**: En el ciclo específico en el que se imprima el log, el inmenso valor temporal aportado por esa tarea se sumará a `g_app_runtime_us`. Esto provocará que ese ciclo de medición evidencie una falsa sobrecarga masiva de microsegundos sobre la CPU. Además, al deshabilitar interrupciones por tanto tiempo, el SysTick podría perder incrementos de tiempo en hardware, rompiendo la cadencia predecible del sistema.
+* **Impacto en `g_app_runtime_us`**: En el ciclo específico en el que se imprima el log, el inmenso valor temporal aportado por esa tarea se sumará a `g_app_runtime_us`. Esto provocará que ese ciclo de medición evidencie una falsa sobrecarga masiva de microsegundos sobre la CPU. Además, al deshabilitar interrupciones por tanto tiempo, el SysTick podría perder incrementos de tiempo en hardware, rompiendo la cadencia predecible del sistema.  
+
+### 4. Valores medidos de `task_dta_list` (Live Expressions)
+
+| Tarea | Índice | NOE (cant.) | LET (us) | BCET (us) | WCET (us) |
+| :--- | :---: | :---: | :---: | :---: | :---: |
+| **Sensor** | `task_dta_list[0]` | 33743 | 4 | 4 | 5 |
+| **System** | `task_dta_list[1]` | 33743 | 3 | 3 | 5 |
+| **Actuator** | `task_dta_list[2]` | 33743 | 2 | 2 | 4 |
+
+> **Nota:** Captura de datos en tiempo real mediante Live Expressions. Los tiempos de ejecución (LET, BCET, WCET) están expresados en microsegundos (us) y el NOE representa la cantidad total de veces que se ejecutó cada tarea.
